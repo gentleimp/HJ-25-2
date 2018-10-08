@@ -14,6 +14,9 @@ const realtime = new Chart(ctx).Bar({
 let isFirst = true;
 const ws = new WebSocket('wss://neto-api.herokuapp.com/realtime');
 ws.addEventListener('message', event => {
+
+//исходное
+  /* 
   if (isFirst) {
     event.data
       .split('\n')
@@ -25,5 +28,20 @@ ws.addEventListener('message', event => {
     const [label, data] = event.data.split('|');
     realtime.removeData();
     realtime.addData([Number(data)], label);
+  }
+*/
+
+//решение
+  var dataObj = JSON.parse(event.data);
+
+  if (isFirst) {     
+    console.log(dataObj);
+    dataObj.forEach(data => { 
+      realtime.addData([data.online], data.time)});
+
+    isFirst = false;
+  } else {    
+    realtime.removeData();
+    realtime.addData([dataObj.online], dataObj.time)
   }
 });
