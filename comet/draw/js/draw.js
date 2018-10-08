@@ -210,3 +210,13 @@ function init() {
 }
 
 window.addEventListener('load', init, false);
+
+//решение
+const ws = new WebSocket('wss://neto-api.herokuapp.com/draw');
+
+window.editor.addEventListener('update', (event) => {
+  canvas = event.canvas;
+  canvas.toBlob((blob) => {
+    ws.send(blob);
+  });
+});
